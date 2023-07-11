@@ -1,8 +1,51 @@
-'use client'
-import Swal from 'sweetalert2';
+"use client"
 import { Pencil, Plus, Trash } from "./components/icons";
+import Swal from 'sweetalert2';
+import axios from 'axios';
+import { useEffect, useState } from "react";
 
-export default function Home() {  
+export default function Home() {
+  const [titulacoes, setTitulacoes] = useState<Array<{ id: string, descricao: string }>>([]);
+
+  useEffect(() => {
+    getTitulos();
+  }, []);
+
+  async function getTitulos() {
+    const url = process.env.NEXT_PUBLIC_API_HOST;
+
+    try {
+      const response = await axios.get(`${url}/titulacoes`);
+      setTitulacoes(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function adicionar() {
+  }
+
+  function excluir() {
+    Swal.fire({
+      title: 'Confirmação de exclusão',
+      text: "Você tem certeza que deseja excluir o item selecionado?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'excluir',
+      cancelButtonText: 'cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire('Removido!');
+      }
+    });
+  }
+
+  function isPar(numero: number) {
+    return numero % 2 === 0;
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
       <div className="rounded-lg bg-neutral-100 p-5 shadow-md">
@@ -25,12 +68,12 @@ export default function Home() {
             </tr>
           </thead>
           <tbody className="border">
-            {getTitulos().map((titulo, posicao) => (
+            {titulacoes.map((titulo, posicao) => (
               <tr
-                key={titulo.codigo}
+                key={titulo.id}
                 className={isPar(posicao) ? "bg-gray-200" : ""}
               >
-                <td align="center">{titulo.codigo}</td>
+                <td align="center">{titulo.id}</td>
                 <td align="center">{titulo.descricao}</td>
                 <td align="center">
                   <Pencil className="text-orange-500" size={24} weight="thin" />
@@ -61,48 +104,4 @@ export default function Home() {
       </div>
     </main>
   );
-}
-
-function adicionar() {
-  Swal.fire({
-    title: 'Confirmação de exclusão',
-    text: "Você tem certeza que deseja excluir o item selecionado?",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'excluir',
-    cancelButtonText: 'cancelar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire(
-        'Removido!',
-      )
-    }
-  })  
-};
-
-function getTitulos() {
-  return [
-    {
-      codigo: 143,
-      descricao: "Graduado",
-    },
-    {
-      codigo: 144,
-      descricao: "Pós-Doutor",
-    },
-    {
-      codigo: 4,
-      descricao: "Doutor(a)",
-    },
-    {
-      codigo: 2,
-      descricao: "Especialista",
-    },
-  ];
-}
-
-function isPar(numero: number) {
-  return numero % 2 == 0;
 }
