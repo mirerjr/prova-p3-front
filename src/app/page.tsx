@@ -15,7 +15,7 @@ export default function Home() {
     const url = process.env.NEXT_PUBLIC_API_HOST;
 
     try {
-      const response = await axios.get(`${url}/titulacoes`);
+      const response = await axios.get(`https://prova-p3-api.vercel.app/titulacoes`);
       setTitulacoes(response.data);
     } catch (error) {
       console.error(error);
