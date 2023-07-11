@@ -1,5 +1,5 @@
 "use client"
-import { Pencil, Plus, Trash } from "./components/icons";
+import { Pencil, Plus, Trash } from "@phosphor-icons/react"
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useEffect, useState } from "react";
